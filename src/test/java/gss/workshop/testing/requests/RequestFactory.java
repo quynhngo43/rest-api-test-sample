@@ -2,6 +2,7 @@ package gss.workshop.testing.requests;
 
 import static gss.workshop.testing.utils.RestUtils.addParams;
 
+import static io.restassured.RestAssured.*;
 import gss.workshop.testing.tests.TestBase;
 import io.restassured.response.Response;
 import java.util.HashMap;
@@ -9,7 +10,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class RequestFactory extends TestBase {
-
   private static final Logger logger = Logger.getLogger(String.valueOf(RequestFactory.class));
 
   // -------------------Board-------------------
@@ -30,6 +30,7 @@ public class RequestFactory extends TestBase {
             path,
             params); // it calls a method of RestClient "doPostRequestWithParamsAndNoPayload" to
     // perform the Post request with specific info was prepared.
+
     logger.info(String.format("The request for creating the %s board completed", boardName));
     return res;
   }
@@ -44,7 +45,7 @@ public class RequestFactory extends TestBase {
   public static Response createBoard(String boardName, boolean defaultList) {
     logger.info("Creating a new board.");
     HashMap<String, String> params = setCommonQueryParams();
-    params.putAll(addParams(Map.of("name", boardName, "defaultLists", false)));
+    params.putAll(addParams(Map.of("name", boardName, "defaultLists", defaultList)));
     String requestPath = String.format(prop.getProperty("boardCreationPath"), version);
     Response res = RestClient.doPostRequestWithParamsAndNoPayload(requestPath, params);
     logger.info(String.format("The request for creating the %s board completed", boardName));
@@ -58,7 +59,11 @@ public class RequestFactory extends TestBase {
    * @return Response of the request
    */
   public static Response getBoardById(String boardId) {
-    return null;
+    HashMap<String, String>  params = setCommonQueryParams();
+    params.putAll(addParams(Map.of("boardId", boardId)));
+    String requestPath = String.format(prop.getProperty("boardCreationPath"), version);
+    Response res = RestClient.doGetRequestWithParams(requestPath, params);
+    return res;
   }
 
   /**
@@ -68,7 +73,13 @@ public class RequestFactory extends TestBase {
    * @return Response of the request
    */
   public static Response deleteBoard(String boardId) {
-    return null;
+    logger.info("Deleting a board.");
+    HashMap<String, String> params = setCommonQueryParams();
+    String requestPath = String.format(prop.getProperty("boardDeletePath"), version, boardId);
+    Response res = RestClient.doDeleteRequestWithParams(requestPath, params);
+    logger.info("The request for deleting the board completed");
+    return res;
+
   }
 
   // -------------------List-------------------
@@ -81,7 +92,13 @@ public class RequestFactory extends TestBase {
    * @return Response of the request
    */
   public static Response createList(String boardId, String listName) {
-    return null;
+    logger.info("Creating a new list.");
+    HashMap<String, String> params = setCommonQueryParams();
+    params.putAll(addParams(Map.of("name", listName)));
+    String requestPath = String.format(prop.getProperty("listCreationPath"), version, boardId);
+    Response res = RestClient.doPostRequestWithParamsAndNoPayload(requestPath, params);
+    logger.info(String.format("The request for creating %s list completed", listName));
+    return res;
   }
 
   // -------------------Card-------------------
@@ -94,7 +111,13 @@ public class RequestFactory extends TestBase {
    * @return Response of the request
    */
   public static Response createCard(String taskName, String listId) {
-    return null;
+    logger.info("Creating a new card.");
+    HashMap <String, String> params = setCommonQueryParams();
+    params.putAll(addParams(Map.of("name", taskName, "idList", listId)));
+    String requestPath = String.format(prop.getProperty("cardCreationPath"), version);
+    Response res = RestClient.doPostRequestWithParamsAndNoPayload(requestPath, params);
+    logger.info("The request for creating the new card completed");
+    return res;
   }
 
   /**
@@ -105,7 +128,13 @@ public class RequestFactory extends TestBase {
    * @return Response of the request
    */
   public static Response updateCard(String cardId, String listId) {
-    return null;
+    logger.info("Updating the card.");
+    HashMap <String, String> params = setCommonQueryParams();
+    params.putAll(addParams(Map.of("idList", listId)));
+    String requestPath = String.format(prop.getProperty("cardUpdatePath"), version, cardId);
+    Response res = RestClient.doPutRequestWithParamsAndNoPayload(requestPath, params);
+    logger.info("The request for update the card completed");
+    return res;
   }
 
   private static HashMap setCommonQueryParams() {
