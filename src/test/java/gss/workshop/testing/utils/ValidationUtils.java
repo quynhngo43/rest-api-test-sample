@@ -21,7 +21,7 @@ public class ValidationUtils {
    * @param expectedStr expected text
    * @param actualStr actual text
    */
-  public static void validateStringEqual(Object expectedStr, Object actualStr) {
+  public static void validateObjectEqual(Object expectedStr, Object actualStr) {
     Assert.assertEquals(expectedStr, actualStr);
   }
 }

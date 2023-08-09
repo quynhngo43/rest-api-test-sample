@@ -1,4 +1,4 @@
-package board;
+package gss.workshop.testing.pojo.board;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
